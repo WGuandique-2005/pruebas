@@ -20,7 +20,13 @@ class Camara:
         self.mp_dibujo = mp.solutions.drawing_utils
         self.vocal_propuesta = None
         self.respuesta_vocal = None
-
+        
+    def liberar_recursos(self):
+        """Liberar recursos de la cámara y cerrar ventanas."""
+        if self.captura.isOpened():
+            self.captura.release()
+        cv2.destroyAllWindows()
+        
     def ElegirVocal(self):
         vocales = ['A', 'E', 'I', 'O', 'U']
         self.vocal_propuesta = random.choice(vocales)
@@ -155,41 +161,49 @@ class Camara:
         return frame, letra_detectada
 
 # Ejecutar el programa
-camara = Camara()
+if __name__ == "__main__":
+    camara = Camara()
 
-# Establecer la ventana de captura de video
-while True:
-    ret, frame = camara.captura.read()
+    try:
+        while True:
+            ret, frame = camara.captura.read()
+            if not ret:
+                print("No se pudo leer el frame")
+                break
 
-    if not ret:
-        break
-    
-    # Modo espejo
-    frame = cv2.flip(frame, 1)
+            frame = cv2.flip(frame, 1)  # Modo espejo
+            frame, letra_detectada = camara.ProcesarFrame(frame, evaluar_dedos=True)
 
-    # Procesar el frame
-    frame, letra_detectada = camara.ProcesarFrame(frame, evaluar_dedos=True)
+            # Mostrar resultados en pantalla
+            cv2.putText(
+                frame,
+                f"Letra detectada: {letra_detectada}",
+                (50, 200),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1,
+                (255, 0, 0),
+                2,
+            )
+            cv2.putText(
+                frame,
+                "Presiona Enter para enviar tu respuesta",
+                (50, 250),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.75,
+                (255, 0, 0),
+                2,
+            )
+            cv2.imshow("Detección de signos", frame)
 
-    # Mostrar el resultado (solo para las pruebas).
-    # ¡¡¡El proyecto no mostrará esta información!!!
-    cv2.putText(frame, f"Letra detectada: {letra_detectada}", (50, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-
-    # Indicar que presione Enter para enviar la seña
-    cv2.putText(frame, "Presiona Enter para enviar tu respuesta", (50, 250), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255, 0, 0), 2)
-    
-    # Mostrar la imagen
-    cv2.imshow('Detección de signos', frame)
-
-    # Evaluar respuesta cuando se presiona Enter
-    if cv2.waitKey(1) == 13:  # Tecla Enter
-        if letra_detectada is not None:
-            camara.CompararVocal(letra_detectada)
-            print(f"Tu respuesta fue: {letra_detectada}. Respuesta: {camara.respuesta_vocal}")
-        else:
-            print("No se detectó ninguna letra.")
-
-        break
-
-# Liberar recursos
-camara.captura.release()
-cv2.destroyAllWindows()
+            if cv2.waitKey(1) == 13:  # Tecla Enter
+                if letra_detectada is not None:
+                    camara.CompararVocal(letra_detectada)
+                    print(f"Tu respuesta fue: {letra_detectada}. Respuesta: {camara.respuesta_vocal}")
+                else:
+                    print("No se detectó ninguna letra")
+                break
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        # Liberar recursos
+        camara.liberar_recursos()
