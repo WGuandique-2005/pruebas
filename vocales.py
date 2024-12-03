@@ -37,7 +37,7 @@ class Camara:
         if letra_detectada == self.vocal_propuesta:
             self.respuesta_vocal = "¡correcta!"
         else:
-            self.respuesta_vocal = "incorrecta :("
+            self.respuesta_vocal = "incorrecta"
 
     def DetectarDedos(self, mano_landmarks, alto, ancho):
         # Obtener la posición de los landmarks necesarios

@@ -1,11 +1,3 @@
-"""
-from flask import Flask, render_template, Response, request, redirect, url_for
-import cv2
-from mano import *
-import time
-from threading import Lock
-"""
-
 from flask import Flask, render_template, Response, request, redirect, url_for
 import cv2
 from threading import Lock
