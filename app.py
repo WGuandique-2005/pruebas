@@ -119,8 +119,8 @@ def nueva_letra():
     """Endpoint para obtener una nueva letra propuesta."""
     global camara
     if camara:
-        camara.ElegirVocal()  # Llama al método para elegir una nueva vocal
-        camara.respuesta_vocal = None  # Restablecer la respuesta a None
+        camara.ElegirVocal()
+        camara.respuesta_vocal = None
     return jsonify({'letra_propuesta': camara.vocal_propuesta})
 
 if __name__ == '__main__':
