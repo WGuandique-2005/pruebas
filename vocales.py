@@ -121,7 +121,6 @@ class Camara:
 
         if self.vocal_propuesta is None:
             self.vocal_propuesta = self.ElegirVocal()
-        cv2.putText(frame, f"Vocal propuesta: {self.vocal_propuesta}", (50, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
         letra_detectada = None
         if resultado.multi_hand_landmarks:
