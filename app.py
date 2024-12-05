@@ -114,5 +114,12 @@ def get_result():
         })
     return jsonify({'letra_propuesta': None, 'respuesta': None})
 
+@app.route('/nueva_letra')
+def nueva_letra():
+    """Endpoint para obtener una nueva letra propuesta."""
+    global camara
+    if camara:
+        camara.ElegirVocal()  # Llama al método para elegir una nueva vocal
+
 if __name__ == '__main__':
     app.run(debug=False)
