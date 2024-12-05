@@ -1,7 +1,7 @@
 from flask import Flask, render_template, Response, request, redirect, url_for
 import cv2
 from threading import Lock
-from vocales import Camara  # Importa la clase Camara del código anterior
+from vocales import Camara  
 import time
 
 app = Flask(__name__)
@@ -13,7 +13,7 @@ camera_active = False
 camara_lock = Lock()
 
 def GenerarFrame():
-    """Generar flujo de video con detección de letras."""
+    """Generar flujo de video con detección de letras"""
     global camara
     while True:
         with camara_lock:  # Bloquea la cámara para evitar conflictos
