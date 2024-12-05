@@ -15,11 +15,18 @@
             <div class="alert alert-primary" role="alert">
                 Haz click en el botón Leer/Finalizar para que la cámara lea tu seña.
             </div>
-            <p>¡Haz la seña correcta para ganar!</p>
+            <p id="instruccion" style="font-size: 1.5em;">¡Haz la seña para la letra propuesta!</p>
 
             <div>
                 <img src="/video" style="border: 1px solid black;" alt="Cámara no disponible"/>
             </div>
+
+            <div id="resultado" style="margin-top: 20px;">
+                <h3 id="letra-propuesta">Letra propuesta: </h3>
+                <h4 id="respuesta">Respuesta: </h4>
+            </div>
+
+            <button id="reiniciar" class="btn btn-primary" style="display: none;">Reiniciar</button>
 
             <form method="POST" action="{{ url_for('toggle_camera', page=request.endpoint) }}">
                 <button type="submit" class="btn {{ 'btn-danger' if camera_active else 'btn-success' }}">
@@ -28,6 +35,33 @@
             </form>
         </center>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Función para actualizar el resultado en la página
+            function actualizarResultado(letra, respuesta) {
+                document.getElementById('letra-propuesta').innerText = 'Letra propuesta: ' + letra;
+                document.getElementById('respuesta').innerText = 'Respuesta: ' + respuesta;
+                document.getElementById('reiniciar').style.display = 'block';
+            }
+
+            // Evento para reiniciar el juego
+            document.getElementById('reiniciar').addEventListener('click', function() {
+                location.reload(); // Simplemente recarga la página para reiniciar
+            });
+
+            // Función para obtener el resultado desde el servidor
+            function obtenerResultado() {
+                fetch('/get_result')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.letra_propuesta) {
+                            actualizarResultado(data.letra_propuesta, data.respuesta);
+                        }
+                    });
+            }
+
+            // Llama a obtenerResultado cada segundo para actualizar la letra y respuesta
+            setInterval(obtenerResultado, 1000);
+        </script>
     </div>
     {% include 'footer.html' %}
 </body>

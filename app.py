@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response, request, redirect, url_for
+from flask import Flask, render_template, Response, request, redirect, url_for, jsonify
 import cv2
 from threading import Lock
 from vocales import Camara  # Importa la clase Camara del código anterior
@@ -11,7 +11,6 @@ app.config['DEBUG'] = True
 camara = None
 camera_active = False
 camara_lock = Lock()
-
 def GenerarFrame():
     """Generar flujo de video con detección de letras."""
     global camara
@@ -29,12 +28,10 @@ def GenerarFrame():
                 # Mostrar la vocal propuesta en el frame
                 if letra_detectada:
                     camara.CompararVocal(letra_detectada)
+                    # Aquí puedes enviar la letra propuesta y la respuesta al cliente
                     texto_respuesta = f"Letra detectada: {letra_detectada}. Respuesta: {camara.respuesta_vocal}"
-                else:
-                    texto_respuesta = "No se detectó ninguna letra."
+                    print(texto_respuesta)  # Para depuración
 
-                cv2.putText(frame, texto_respuesta, (50, 300), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
-                
                 # Codificar el frame para transmisión
                 ret, jpeg = cv2.imencode('.jpg', frame)
                 if ret:
@@ -105,6 +102,17 @@ def toggle_camera(page):
             camara = Camara()
             print("Cámara activada")
     return redirect(url_for(page))
+
+@app.route('/get_result')
+def get_result():
+    """Endpoint para obtener la letra propuesta y la respuesta."""
+    global camara
+    if camara:
+        return jsonify({
+            'letra_propuesta': camara.vocal_propuesta,
+            'respuesta': camara.respuesta_vocal
+        })
+    return jsonify({'letra_propuesta': None, 'respuesta': None})
 
 if __name__ == '__main__':
     app.run(debug=False)
