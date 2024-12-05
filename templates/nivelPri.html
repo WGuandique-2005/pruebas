@@ -42,11 +42,6 @@
 
         <div class="row">
             <div class="col-md-6 column">
-                <div>
-                    <img src="/video" style="border: 1px solid black; width: 100%;" alt="Cámara no disponible"/>
-                </div>
-            </div>
-            <div class="col-md-6 column">
                 <div id="resultado" style="margin-top: 20px;">
                     <h3 class="letra-propuesta" id="letra-propuesta">Letra propuesta: </h3>
                     <h4 class="resultado" id="respuesta">Respuesta: </h4>
@@ -59,6 +54,11 @@
                         {{ 'Finalizar' if camera_active else 'Leer' }}
                     </button>
                 </form>
+            </div>
+            <div class="col-md-6 column">
+                <div>
+                    <img src="/video" style="border: 1px solid black; width: 100%;" alt="Cámara no disponible"/>
+                </div>
             </div>
         </div>
 
