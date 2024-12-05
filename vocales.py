@@ -20,7 +20,6 @@ class Camara:
         self.mp_dibujo = mp.solutions.drawing_utils
         self.vocal_propuesta = None
         self.respuesta_vocal = None
-        self.ultima_vocal = None
         
     def liberar_recursos(self):
         """Liberar recursos de la cámara y cerrar ventanas."""
@@ -29,12 +28,9 @@ class Camara:
         cv2.destroyAllWindows()
         
     def ElegirVocal(self):
-            vocales = ['A', 'E', 'I', 'O', 'U']
-            vocal = random.choice(vocales)
-            while vocal == self.ultima_vocal:
-                vocal = random.choice(vocales)
-            self.ultima_vocal = vocal
-            return vocal
+        vocales = ['A', 'E', 'I', 'O', 'U']
+        self.vocal_propuesta = random.choice(vocales)
+        return self.vocal_propuesta
     
     def CompararVocal(self, letra_detectada):
         # Comparar la letra detectada con la vocal propuesta
