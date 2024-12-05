@@ -120,6 +120,8 @@ def nueva_letra():
     global camara
     if camara:
         camara.ElegirVocal()  # Llama al método para elegir una nueva vocal
+        camara.respuesta_vocal = None  # Restablecer la respuesta a None
+    return jsonify({'letra_propuesta': camara.vocal_propuesta})
 
 if __name__ == '__main__':
     app.run(debug=False)
