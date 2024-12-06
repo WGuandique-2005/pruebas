@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,22 +12,25 @@
             font-weight: bold;
             margin-top: 20px;
         }
+
         .letra-propuesta {
             font-size: 3em;
             color: #1c2385;
             font-weight: bold;
             margin-top: 20px;
         }
+
         .column {
             padding: 20px;
         }
     </style>
 </head>
+
 <body>
     {% include 'header.html' %}
     <div class="container px-5 mt-4">
         <center>
-            <span style="font-size: 2.5em; color: #1c2385;">¡Vocales!</span>
+            <span style="font-size: 2.5em; color: #154cc3;">¡Vocales!</span>
             <hr>
             <div class="alert alert-primary" role="alert">
                 Haz click en el botón Leer/Finalizar para que la cámara lea tu seña.
@@ -51,7 +55,8 @@
             </div>
             <div class="col-md-6 column">
                 <div>
-                    <img src="/video" style="border: 1px solid black; width: 100%;" alt="Cámara no disponible"/>
+                    <img src="/video" id="signImage" style="border: 1px solid black; width: 100%;"
+                        alt="Cámara no disponible" />
                 </div>
             </div>
         </div>
@@ -62,13 +67,21 @@
             function actualizarResultado(letra, respuesta) {
                 document.getElementById('letra-propuesta').innerText = 'Letra propuesta: ' + letra;
                 document.getElementById('respuesta').innerText = 'Respuesta: ' + respuesta;
+
+                const signImage = document.getElementById('signImage');
                 if (respuesta === "¡correcta!") {
                     document.getElementById('nueva-letra').style.display = 'block'; // Mostrar el botón de nueva letra
+                    signImage.style.margin = "15px";
+                    signImage.style.border = "10px solid green";
+                }
+                if (respuesta === "incorrecta") {
+                    signImage.style.margin = "15px"; 
+                    signImage.style.border = "10px solid red"; 
                 }
             }
 
             // Evento para obtener una nueva letra
-            document.getElementById('nueva-letra').addEventListener('click', function() {
+            document.getElementById('nueva-letra').addEventListener('click', function () {
                 fetch('/nueva_letra') // Llama al endpoint para obtener una nueva letra
                     .then(response => response.json())
                     .then(data => {
@@ -85,7 +98,7 @@
                         if (data.letra_propuesta) {
                             actualizarResultado(data.letra_propuesta, data.respuesta);
                         }
-                });
+                    });
             }
 
             // Llama a obtenerResultado cada segundo para actualizar la letra y respuesta
@@ -94,4 +107,5 @@
     </div>
     {% include 'footer.html' %}
 </body>
+
 </html>
